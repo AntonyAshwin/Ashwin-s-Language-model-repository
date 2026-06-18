@@ -1,4 +1,9 @@
-class Tokenizer {
+package com.ashwin.ashwinsmodel.data;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+public class Tokenizer {
 
     HashMap<String, Integer> wordToIndex = new HashMap<>();
     LinkedHashMap<Integer, String> indexToWord = new LinkedHashMap<>();
@@ -19,6 +24,10 @@ class Tokenizer {
             tokenCounter++;
             }  
         }
+   }
+
+   public HashMap<String, Integer> getWordToIndex() {
+    return wordToIndex;
    }
 
    public int[] getTokens(String sentence)
