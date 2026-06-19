@@ -1,5 +1,9 @@
 package com.ashwin.ashwinsmodel.model;
-import com.ashwin.ashwinsmodel.data.Tokenizer; 
+import com.ashwin.ashwinsmodel.data.Tokenizer;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import com.ashwin.ashwinsmodel.data.DatasetLoader;
 public class NeuralBigramModel
 {
@@ -19,5 +23,7 @@ public class NeuralBigramModel
             }
             System.out.println();   
         }
+        ArrayList<HashSet<String>> pairs =  datasetLoader.getWordPairs();
+        
     }
 }
