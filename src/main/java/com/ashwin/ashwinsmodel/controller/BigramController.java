@@ -19,17 +19,23 @@ public class BigramController {
         String current = word.trim();
         StringBuilder sentence = new StringBuilder(current);
         int count = 0;
-        int unknownCount = 0;
+        
         if (!current.endsWith(".")) {
             while (count < 10) {
                 current = neuralBigramModel.predict(current);
-                if (current.startsWith("Unknown word:")) {
-                    unknownCount++;
-                    if (unknownCount >= 10) break;
+                
+                // Check if the model encountered an unknown word
+                if (current != null && current.startsWith("Unknown word:")) {
+                    sentence.append(" (word not present in vocabulary)");
+                    break; // Stop the loop immediately instead of running 10 times
                 }
+                
                 sentence.append(" ").append(current);
                 count++;
-                if (current.endsWith(".")) break;
+                
+                if (current != null && current.endsWith(".")) {
+                    break;
+                }
             }
         }
         return sentence.toString();
