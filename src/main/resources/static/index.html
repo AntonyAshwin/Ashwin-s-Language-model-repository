@@ -164,7 +164,7 @@
           if (text.startsWith("NOT_IN_VOCABULARY:")) {
             const unknownWord = text.slice("NOT_IN_VOCABULARY:".length).trim();
             const targetUrl = "training-data.html";
-            resp.textContent = `Word "${unknownWord}" is not present in vocabulary. Click here to open the training data page. - wont open if you are on phone`;
+            resp.textContent = `Word "${unknownWord}" is not present in vocabulary. Click here to open the training data page. - wont open if you are on phone because of huggingface`;
             resp.classList.add('clickable');
             resp.addEventListener('click', () => {
               window.open(targetUrl, '_blank', 'noopener,noreferrer');
