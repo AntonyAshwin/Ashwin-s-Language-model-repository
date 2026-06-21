@@ -13,13 +13,11 @@
     }
 
     .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+      /* Changed from fixed to relative so it naturally pushes down content below it */
+      position: relative; 
       background: #f5f5f5;
-      padding: 16px;
-      z-index: 1000;
+      padding: 16px 0; /* Adjusted padding to look clean */
+      width: 100%;
     }
 
     .header h1 {
@@ -36,17 +34,13 @@
       flex-direction: column;
       gap: 12px;
       max-width: 600px;
-      margin: 40px 0 0 0; 
+      margin: 16px 0 0 0; /* Clean, small margin since header handles the spacing now */
     }
 
     @media (max-width: 600px) {
       #chat {
-        margin: 40px auto 0 auto;
-        height: calc(100dvh - 40px);
-        padding: 16px;
-      }
-      .input-row {
-        margin-top: auto; 
+        margin: 16px auto 0 auto;
+        padding: 0 16px;
       }
     }
 
@@ -72,7 +66,6 @@
       cursor: pointer;
     }
 
-    /* Style rule for links generated inside error responses */
     .response a {
       color: #4a90e2;
       text-decoration: underline;
@@ -111,7 +104,7 @@
   <div class="header">
     <h1>
       <a href="https://en.wikipedia.org/wiki/Word_n-gram_language_model#" target="_blank">
-        What is a bigram model ? (Click here -  this only works on desktop and not on phones because of huggingface)
+        What is a bigram model ? (Click here - this only works on desktop and not on phones because of huggingface)
       </a>
     </h1>
   </div>
@@ -160,7 +153,6 @@
           const resp = document.createElement('div');
           resp.className = 'response';
 
-          // Check if backend returned our custom unknown word flag
           if (text.startsWith("NOT_IN_VOCABULARY:")) {
             const unknownWord = text.slice("NOT_IN_VOCABULARY:".length).trim();
             const targetUrl = "training-data.html";
@@ -170,7 +162,6 @@
               window.open(targetUrl, '_blank', 'noopener,noreferrer');
             });
           } else {
-            // Standard expected sequence path
             resp.textContent = text;
           }
 
