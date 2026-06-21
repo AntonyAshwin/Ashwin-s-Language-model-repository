@@ -37,32 +37,36 @@ public class NeuralBigramModel
     {
         ArrayList<HashSet<String>> pairs = datasetLoader.getWordPairs();
 
-        for (HashSet<String> pair : pairs)
+        for (int epoch = 0; epoch < 100; epoch++)
         {
-            String[] words = pair.toArray(new String[0]);
-            if (words.length < 2) continue;
+            double totalLoss = 0.0;
 
-            String inputWord  = words[0];
-            String targetWord = words[1];
+            for (HashSet<String> pair : pairs)
+            {
+                String[] words = pair.toArray(new String[0]);
+                if (words.length < 2) continue;
 
-            Integer inputIdx  = tokenizer.getWordToIndex().get(inputWord);
-            Integer targetIdx = tokenizer.getWordToIndex().get(targetWord);
+                String inputWord  = words[0];
+                String targetWord = words[1];
 
-            if (inputIdx == null || targetIdx == null) continue;
+                Integer inputIdx  = tokenizer.getWordToIndex().get(inputWord);
+                Integer targetIdx = tokenizer.getWordToIndex().get(targetWord);
 
-            // Forward pass
-            double[] logits = new double[uniqueVocabSize];
-            for (int j = 0; j < uniqueVocabSize; j++)
-                logits[j] = bigramMatrix[inputIdx][j];
+                if (inputIdx == null || targetIdx == null) continue;
+                double[] logits = new double[uniqueVocabSize];
+                for (int j = 0; j < uniqueVocabSize; j++)
+                    logits[j] = bigramMatrix[inputIdx][j];
 
-            double[] probs = softmax(logits);
+                double[] probs = softmax(logits);
 
-            double loss = computeLoss(probs, targetIdx);
-            System.out.println("Input: " + inputWord + " -> Target: " + targetWord
-                + " | P(target) = " + probs[targetIdx] + " | Loss = " + loss);
+                double loss = computeLoss(probs, targetIdx);
+                totalLoss += loss;
 
-            double[] gradLogits = computeGradients(probs, targetIdx);
-            updateWeights(inputIdx, gradLogits);
+                double[] gradLogits = computeGradients(probs, targetIdx);
+                updateWeights(inputIdx, gradLogits);
+            }
+
+            System.out.println("Epoch " + epoch + " | Avg Loss = " + totalLoss / pairs.size());
         }
     }
 
