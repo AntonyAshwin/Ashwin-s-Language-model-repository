@@ -161,8 +161,9 @@
           if (text.startsWith("NOT_IN_VOCABULARY:")) {
             const unknownWord = text.slice("NOT_IN_VOCABULARY:".length).trim();
             
-            // Build the clean message with an HTML anchor link inside it
-            resp.innerHTML = `Word <strong>"${unknownWord}"</strong> is not present in vocabulary. View the <a href="https://huggingface.co/spaces/Ashwin052001/ashwinsSpace/blob/main/training-data.txt" target="_blank">training data</a> to check valid words.`;
+            // Build the clean message with a full-response clickable link
+            const targetUrl = "training-data.html";
+            resp.innerHTML = `<a href="${targetUrl}" target="_blank">Word <strong>"${unknownWord}"</strong> is not present in vocabulary. click here to view all words from the vocabulary.</a>`;
           } else {
             // Standard expected sequence path
             resp.textContent = text;
