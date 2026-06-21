@@ -4,7 +4,11 @@ import com.ashwin.ashwinsmodel.data.Tokenizer;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
 import com.ashwin.ashwinsmodel.data.DatasetLoader;
+
+@Component
 public class NeuralBigramModel
 {
     private double[][] bigramMatrix;
@@ -33,6 +37,7 @@ public class NeuralBigramModel
 
     private static final double LEARNING_RATE = 0.01;
 
+    @PostConstruct
     public void trainModel()
     {
         ArrayList<HashSet<String>> pairs = datasetLoader.getWordPairs();
