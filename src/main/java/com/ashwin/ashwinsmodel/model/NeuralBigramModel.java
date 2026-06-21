@@ -31,7 +31,8 @@ public class NeuralBigramModel
         }
     }
 
-    // Forward pass: dot input one-hot into bigramMatrix row, apply softmax
+    private static final double LEARNING_RATE = 0.01;
+
     public void trainModel()
     {
         ArrayList<HashSet<String>> pairs = datasetLoader.getWordPairs();
@@ -49,21 +50,43 @@ public class NeuralBigramModel
 
             if (inputIdx == null || targetIdx == null) continue;
 
-            // Forward propagation
+            // Forward pass
             double[] logits = new double[uniqueVocabSize];
             for (int j = 0; j < uniqueVocabSize; j++)
-            {
                 logits[j] = bigramMatrix[inputIdx][j];
-            }
 
             double[] probs = softmax(logits);
 
+            double loss = computeLoss(probs, targetIdx);
             System.out.println("Input: " + inputWord + " -> Target: " + targetWord
-                + " | P(target) = " + probs[targetIdx]);
+                + " | P(target) = " + probs[targetIdx] + " | Loss = " + loss);
+
+            double[] gradLogits = computeGradients(probs, targetIdx);
+            updateWeights(inputIdx, gradLogits);
         }
     }
 
-    // Softmax: convert raw logits to probability distribution
+    public double computeLoss(double[] probs, int targetIdx)
+    {
+        return -Math.log(probs[targetIdx] + 1e-10); 
+    }
+
+    public double[] computeGradients(double[] probs, int targetIdx)
+    {
+        double[] grad = new double[probs.length];
+        for (int j = 0; j < probs.length; j++)
+            grad[j] = probs[j];
+        grad[targetIdx] -= 1.0;
+        return grad;
+    }
+
+    public void updateWeights(int inputIdx, double[] gradLogits)
+    {
+        for (int j = 0; j < uniqueVocabSize; j++)
+            bigramMatrix[inputIdx][j] -= LEARNING_RATE * gradLogits[j];
+    }
+
+
     public double[] softmax(double[] logits)
     {
         double max = logits[0];
@@ -74,7 +97,7 @@ public class NeuralBigramModel
         double[] exps = new double[logits.length];
         for (int i = 0; i < logits.length; i++)
         {
-            exps[i] = Math.exp(logits[i] - max); // subtract max for numerical stability
+            exps[i] = Math.exp(logits[i] - max); 
             sumExp += exps[i];
         }
 
