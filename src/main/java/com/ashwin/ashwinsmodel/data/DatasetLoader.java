@@ -3,6 +3,7 @@ package com.ashwin.ashwinsmodel.data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.stream.Stream;
 
 public class DatasetLoader {
 
@@ -45,6 +46,9 @@ public class DatasetLoader {
 
     public String[] getwordArray()
     {
-        return trainingData.split(" ");
+        return Arrays.stream(trainingData.split("\\s+"))
+                     .map(String::trim)
+                     .filter(w -> !w.isEmpty())
+                     .toArray(String[]::new);
     }
 }

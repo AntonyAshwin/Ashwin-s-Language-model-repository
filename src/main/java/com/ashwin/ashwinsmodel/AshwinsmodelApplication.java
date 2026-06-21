@@ -25,11 +25,25 @@ public class AshwinsmodelApplication {
 		NeuralBigramModel neuralBigramModel = new NeuralBigramModel();
 		neuralBigramModel.trainModel();
 		Scanner sc = new Scanner(System.in);
-		String word;
-		while(true){
-			word = sc.nextLine();
-			System.out.println("predict('" + word + "') -> " + neuralBigramModel.predict(word));
+		while (true) {
+			String current = sc.nextLine();
+			StringBuilder sentence = new StringBuilder(current);
+			int count = 0;
+			int unknownCount = 0;
+			if (!current.endsWith(".")) {
+				while (count < 10) {
+					current = neuralBigramModel.predict(current);
+					if (current.startsWith("Unknown word:")) {
+						unknownCount++;
+						if (unknownCount >= 10) break;
+					}
+					sentence.append(" ").append(current);
+					count++;
+					if (current.endsWith(".")) break;
+				}
 			}
+			System.out.println(sentence.toString());
+		}
 	}
 
 }

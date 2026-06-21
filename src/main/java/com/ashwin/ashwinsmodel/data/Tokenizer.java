@@ -15,9 +15,11 @@ public class Tokenizer {
 
    public void createVocabalary(String response)
    {
-        String[] words = response.split(" "); 
+        String[] words = response.split("\\s+");
         for(String word : words)
         {
+            word = word.trim();
+            if(word.isEmpty()) continue;
             if(!wordToIndex.containsKey(word)) {
             wordToIndex.putIfAbsent(word, tokenCounter);
             indexToWord.putIfAbsent(tokenCounter, word);
