@@ -2,15 +2,12 @@ package com.ashwin.ashwinsmodel.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.stream.Stream;
 
 public class DatasetLoader {
 
-
     String trainingData;
     String trainingData2;
-    ArrayList<HashSet<String>> pairs = new ArrayList<HashSet<String>>();
 
     public String getDataSet() {
         // for now this string later swap with get call
@@ -19,14 +16,13 @@ public class DatasetLoader {
         return trainingData + trainingData2;
     }
 
-    public ArrayList<HashSet<String>> getWordPairs()
+    public ArrayList<String[]> getWordPairs()
     {
         String[] words = getwordArray();
-        for(int i = 0; i < words.length; i++)
+        ArrayList<String[]> pairs = new ArrayList<>();
+        for(int i = 0; i < words.length - 1; i++)
         {
-            if(i >= words.length - 1)
-                break;
-            pairs.add(new HashSet<>(Arrays.asList(words[i], words[i+1])));
+            pairs.add(new String[] { words[i], words[i+1] });
             if(words[i+1].charAt(words[i+1].length() -  1) == '.')
                  i++;
         }

@@ -2,7 +2,6 @@ package com.ashwin.ashwinsmodel.model;
 import com.ashwin.ashwinsmodel.data.Tokenizer;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
@@ -40,19 +39,18 @@ public class NeuralBigramModel
     @PostConstruct
     public void trainModel()
     {
-        ArrayList<HashSet<String>> pairs = datasetLoader.getWordPairs();
+        ArrayList<String[]> pairs = datasetLoader.getWordPairs();
 
         for (int epoch = 0; epoch < 100; epoch++)
         {
             double totalLoss = 0.0;
 
-            for (HashSet<String> pair : pairs)
+            for (String[] pair : pairs)
             {
-                String[] words = pair.toArray(new String[0]);
-                if (words.length < 2) continue;
+                if (pair.length < 2) continue;
 
-                String inputWord  = words[0];
-                String targetWord = words[1];
+                String inputWord  = pair[0];
+                String targetWord = pair[1];
 
                 Integer inputIdx  = tokenizer.getWordToIndex().get(inputWord);
                 Integer targetIdx = tokenizer.getWordToIndex().get(targetWord);
@@ -75,11 +73,11 @@ public class NeuralBigramModel
         }
     }
     
-    public String predict(String inputWord)
-    {
+        public String predict(String inputWord) {
         Integer inputIdx = tokenizer.getWordToIndex().get(inputWord);
-        if (inputIdx == null)
-            return "Unknown word: " + inputWord;
+        if (inputIdx == null) {
+            return "NOT_IN_VOCABULARY:" + inputWord;
+        }
 
         double[] logits = new double[uniqueVocabSize];
         for (int j = 0; j < uniqueVocabSize; j++)

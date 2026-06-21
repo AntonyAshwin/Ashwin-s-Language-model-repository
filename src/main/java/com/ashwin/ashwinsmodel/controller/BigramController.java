@@ -17,6 +17,15 @@ public class BigramController {
     @PostMapping("/predict")
     public String predict(@RequestBody String word) {
         String current = word.trim();
+
+        if (current.isEmpty()) {
+            return "";
+        }
+
+        if (neuralBigramModel.predict(current).startsWith("NOT_IN_VOCABULARY:")) {
+            return "NOT_IN_VOCABULARY:" + current;
+        }
+
         StringBuilder sentence = new StringBuilder(current);
         int count = 0;
         
@@ -24,10 +33,8 @@ public class BigramController {
             while (count < 10) {
                 current = neuralBigramModel.predict(current);
                 
-                // Check if the model encountered an unknown word
-                if (current != null && current.startsWith("Unknown word:")) {
-                    sentence.append(" (word not present in vocabulary)");
-                    break; // Stop the loop immediately instead of running 10 times
+                if (current != null && current.startsWith("NOT_IN_VOCABULARY:")) {
+                    return current;
                 }
                 
                 sentence.append(" ").append(current);

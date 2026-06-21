@@ -13,7 +13,6 @@
       padding: 16px;
     }
 
-    /* Fixed header locked at the top of the page */
     .header {
       position: fixed;
       top: 0;
@@ -38,7 +37,7 @@
       flex-direction: column;
       gap: 12px;
       max-width: 600px;
-      margin: 40px 0 0 0; /* Top margin accommodates the fixed header */
+      margin: 40px 0 0 0; 
     }
 
     @media (max-width: 600px) {
@@ -68,6 +67,12 @@
       line-height: 1.5;
       word-break: break-word;
       margin-bottom: 8px;
+    }
+
+    /* Style rule for links generated inside error responses */
+    .response a {
+      color: #4a90e2;
+      text-decoration: underline;
     }
 
     .input-row {
@@ -151,7 +156,18 @@
 
           const resp = document.createElement('div');
           resp.className = 'response';
-          resp.textContent = text;
+
+          // Check if backend returned our custom unknown word flag
+          if (text.startsWith("NOT_IN_VOCABULARY:")) {
+            const unknownWord = text.slice("NOT_IN_VOCABULARY:".length).trim();
+            
+            // Build the clean message with an HTML anchor link inside it
+            resp.innerHTML = `Word <strong>"${unknownWord}"</strong> is not present in vocabulary. View the <a href="https://huggingface.co/spaces/Ashwin052001/ashwinsSpace/blob/main/training-data.txt" target="_blank">training data</a> to check valid words.`;
+          } else {
+            // Standard expected sequence path
+            resp.textContent = text;
+          }
+
           chat.appendChild(resp);
         } catch (e) {
           row.remove();
