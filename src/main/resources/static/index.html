@@ -10,13 +10,13 @@
     body {
       background: #f5f5f5;
       padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     .header {
-      /* Changed from fixed to relative so it naturally pushes down content below it */
       position: relative; 
       background: #f5f5f5;
-      padding: 16px 0; /* Adjusted padding to look clean */
+      padding: 16px 0; 
       width: 100%;
     }
 
@@ -24,24 +24,30 @@
       font-size: 18px;
     }
 
-    .header a {
+    .header .wiki-trigger-link {
       color: black;
       text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* Main App Views */
+    #main-view, #vocab-view, #wiki-view {
+      max-width: 600px;
+      margin: 16px 0 0 0;
+    }
+
+    @media (max-width: 600px) {
+      #main-view, #vocab-view, #wiki-view {
+        margin: 16px auto 0 auto;
+        padding: 0 16px;
+      }
     }
 
     #chat {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      max-width: 600px;
-      margin: 16px 0 0 0; /* Clean, small margin since header handles the spacing now */
-    }
-
-    @media (max-width: 600px) {
-      #chat {
-        margin: 16px auto 0 auto;
-        padding: 0 16px;
-      }
+      margin-bottom: 16px;
     }
 
     .user-message {
@@ -64,11 +70,7 @@
 
     .response.clickable {
       cursor: pointer;
-    }
-
-    .response a {
-      color: #4a90e2;
-      text-decoration: underline;
+      border-left-color: #e67e22;
     }
 
     .input-row {
@@ -92,10 +94,67 @@
       border-color: #4a90e2;
     }
 
-    .input-row button {
+    .input-row button, .back-btn {
       font-size: 15px;
       white-space: nowrap;
       cursor: pointer;
+      padding: 10px 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+    }
+    
+    .input-row button:hover, .back-btn:hover {
+      background: #eee;
+    }
+
+    /* Content Container Layout (Vocab & Wiki) */
+    .content-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+      margin-top: 12px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .content-container h2 {
+      font-size: 20px;
+      margin-bottom: 12px;
+      color: #111;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 6px;
+    }
+
+    .content-container h3 {
+      font-size: 16px;
+      margin: 16px 0 6px 0;
+      color: #333;
+    }
+
+    .content-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #444;
+      margin-bottom: 12px;
+    }
+
+    .wiki-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+
+    .wiki-table th, .wiki-table td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    .wiki-table th {
+      background-color: #f2f2f2;
     }
   </style>
 </head>
@@ -103,16 +162,99 @@
 
   <div class="header">
     <h1>
-      <a href="https://en.wikipedia.org/wiki/Word_n-gram_language_model#" target="_blank">
-        What is a bigram model ? (Click here - this only works on desktop and not on phones because of huggingface)
-      </a>
+      <span class="wiki-trigger-link" onclick="showWikiView()">
+        What is a bigram model? (Click here)
+      </span>
     </h1>
   </div>
 
-  <div id="chat"></div>
+  <div id="main-view">
+    <div id="chat"></div>
+  </div>
+
+  <div id="vocab-view" style="display: none;">
+    <button class="back-btn" onclick="showChatView()">← Back to Chat</button>
+    <div class="content-container">
+      <p class="content-text">It's not a lot, I just wanted to see the weight adjustments in the neural network and how the softmax and loss functions work—pretty interesting math there.</p>
+      <h3>Training Data (All words below are part of the vocabulary):</h3>
+      <p class="content-text" style="font-style: italic;">
+        twinkle, twinkle, little star, how I wonder what you are. Up above the world so high, like a diamond in the sky. When the blazing sun is gone, when he nothing shines upon, then you show your little light, twinkle, twinkle, all the night. Then the traveler in the dark thanks you for your tiny spark, he could not see which way to go, if you did not twinkle so. In the dark blue sky you keep, and often through my curtains peep, for you never shut your eye, till the sun is in the sky. As your bright and tiny spark lights the traveler in the dark, though I know not what you are, twinkle, twinkle, little star. Jack and Jill went up the hill to fetch a pail of water. Jack fell down and broke his crown, and Jill came tumbling after. Up Jack got, and home did trot, as fast as he could caper, to old Dame Dob, who patched his knob with vinegar and brown paper. Then Jill came in, and she did grin, to see his paper plaster, her mother, vexed, did whip her next, for causing Jack s disaster. Humpty Dumpty sat on a wall, Humpty Dumpty had a great fall. All the king s horses and all the king s men, couldn t put Humpty together again. Baa, baa, black sheep, have you any wool. Yes, sir, yes, sir, three bags full. One for the master, and one for the dame, and one for the little boy who lives down the lane. Mary had a little lamb, its fleece was white as snow. And everywhere that Mary went, the lamb was sure to go. It followed her to school one day, which was against the rule. It made the children laugh and play to see a lamb at school. And so the teacher turned it out, but still it lingered near, and waited patiently about till Mary did appear. Why does the lamb love Mary so, the eager children cry. Why, Mary loves the lamb, you know, the teacher did reply. Old Mother Hubbard went to the cupboard, to give her poor dog a bone, but when she got there the cupboard was bare, and so the poor dog had none. She went to the baker s to buy him some bread, but when she came back the poor dog was dead. She went to the undertaker s to buy him a coffin, but when she came back the dog was laughing. She took a clean dish to get him some tripe, but when she came back he was smoking a pipe. She went to the alehouse to get him some beer, but when she came back the dog sat in a chair. She went to the tavern to buy him some wine, but when she came back the dog was polite and fine. She went to the hatter s to buy him a hat, but when she came back he was feeding the cat. She went to the barber s to buy him a wig, but when she came back he was dancing a jig. She went to the cobbler s to buy him some shoes, but when she came back he was reading the news. The cat and the fiddle, the cow jumped over the moon. The little dog laughed to see such sport, and the dish ran away with the spoon. Hickety, pickety, my black hen, she lays eggs for gentlemen. Gentlemen come every day, to see what my black hen doth lay. Sometimes nine and sometimes ten, hickety, pickety, my black hen. Hickory, dickory, dock, the mouse ran up the clock. The clock struck one, the mouse ran down, hickory, dickory, dock. The clock struck two, the mouse said boo, hickory, dickory, dock. The clock struck three, the mouse went free, hickory, dickory, dock. The clock struck four, the mouse said no more, hickory, dickory, dock. Little Bo Peep has lost her sheep, and can t tell where to find them. Leave them alone, and they ll come home, bringing their tails behind them. Little Bo Peep fell fast asleep, and dreamt she heard them bleating, but when she awoke, she found it a joke, for they were still fleeting. Then up she took her little crook, determined for to find them. The morning sun rose above the hills and the birds began to sing, people walked along quiet roads and children played in open fields, a gentle breeze moved across the grass and carried the scent of flowers, farmers worked through the day and travelers continued their journeys, the sky remained clear and bright, clouds appeared slowly in the distance and drifted across the horizon, evening arrived with calm colors and long shadows, families gathered together and shared stories, the stars appeared one by one in the dark sky, the night remained peaceful and still. The next day began much the same way, the town awoke early and activity returned to the streets, merchants opened their shops and customers arrived throughout the morning, students studied lessons and practiced new skills, workers completed tasks and planned future projects, time passed steadily and seasons changed, years went by and memories accumulated, knowledge grew through experience and effort, success followed patience and persistence, challenges appeared from time to time but people adapted and continued forward, progress was made step by step and goal by goal, the story continued without end.
+      </p>
+    </div>
+  </div>
+
+  <div id="wiki-view" style="display: none;">
+    <button class="back-btn" onclick="showChatView()">← Back to Chat</button>
+    <div class="content-container">
+      <h2>Word n-gram language model</h2>
+      <p class="content-text">From Wikipedia, the free encyclopedia</p>
+      
+      <p class="content-text">A word n-gram language model is a statistical model of language which calculates the probability of the next word in a sequence from a fixed size window of previous words. If one previous word is considered, it is a bigram model; if two words, a trigram model; if n − 1 words, an n-gram model.</p>
+      
+      <p class="content-text">Special tokens are introduced to denote the start and end of a sentence ⟨s⟩ and ⟨/s⟩. To prevent a zero probability being assigned to unseen words, the probability of each seen word is slightly lowered to make room for the unseen words in a given corpus. To achieve this, various smoothing methods are used, from simple "add-one" smoothing to more sophisticated techniques, such as Good–Turing discounting or back-off models.</p>
+      
+      <p class="content-text">Word n-gram models have largely been superseded by recurrent neural network–based models, which in turn have been superseded by Transformer-based models often referred to as large language models.</p>
+
+      <h3>Unigram model</h3>
+      <p class="content-text">A special case, where n = 1, is called a unigram model. Probability of each word in a sequence is independent from probabilities of other words in the sequence. Each word's probability in the sequence is equal to the word's probability in an entire document.</p>
+      <p class="content-text"><strong>Puni(t1t2t3) = P(t1)P(t2)P(t3)</strong></p>
+      
+      <table class="wiki-table">
+        <tr><th>Word</th><th>Its probability in doc</th></tr>
+        <tr><td>a</td><td>0.1</td></tr>
+        <tr><td>world</td><td>0.2</td></tr>
+        <tr><td>likes</td><td>0.05</td></tr>
+        <tr><td>we</td><td>0.05</td></tr>
+        <tr><td>share</td><td>0.3</td></tr>
+      </table>
+
+      <h3>Bigram model</h3>
+      <p class="content-text">In a bigram word (n = 2) language model, the probability of the sentence <em>I saw the red house</em> is approximated as:</p>
+      <p class="content-text"><strong>P(I, saw, the, red, house) ≈ P(I│⟨s⟩)P(saw│I)P(the│saw)P(red│the)P(house│red)P(⟨/s⟩│house)</strong></p>
+
+      <h3>Trigram model</h3>
+      <p class="content-text">In a trigram (n = 3) language model, the approximation is:</p>
+      <p class="content-text"><strong>P(I, saw, the, red, house) ≈ P(I│⟨s⟩,⟨s⟩)P(saw│⟨s⟩,I)P(the│I, saw)P(red│saw, the)P(house│the, red)P(⟨/s⟩│red, house)</strong></p>
+
+      <h3>Approximation method</h3>
+      <p class="content-text">The approximation method calculates the probability P(w1,…,wm) of observing the sentence w1,…,wm:</p>
+      <p class="content-text"><strong>P(w1,…,wm) = ∏ P(wi│w1,…,wi-1) ≈ ∏ P(wi│wi-(n-1),…,wi-1)</strong></p>
+
+      <h3>Out-of-vocabulary words</h3>
+      <p class="content-text">An issue when using n-gram language models are out-of-vocabulary (OOV) words. They are encountered in computational linguistics and natural language processing when the input includes words which were not present in a system's dictionary or database during its preparation. By default, when a language model is estimated, the entire observed vocabulary is used. In some cases, a special token (e.g. &lt;unk&gt;) is explicitly introduced to capture transition states for unseen structures.</p>
+
+      <h3>Smoothing techniques</h3>
+      <p class="content-text">In practice it was necessary to smooth the probability distributions by also assigning non-zero probabilities to unseen words or n-grams. Various smoothing methods were used, from simple "add-one" (Laplace) smoothing to more sophisticated models, such as Kneser–Ney smoothing or Good–Turing discounting.</p>
+
+      <h3>Skip-gram language model</h3>
+      <p class="content-text">Skip-gram language model is an attempt at overcoming the data sparsity problem. Words represented in an embedding vector were not necessarily consecutive anymore, but could leave gaps that are skipped over (thus the name "skip-gram").</p>
+      <p class="content-text">For example, in the input text: <em>"the rain in Spain falls mainly on the plain"</em>, the set of 1-skip-2-grams includes all the bigrams, and in addition the subsequences: <em>the in, rain Spain, in falls, Spain mainly, falls on, mainly the, and on plain.</em></p>
+    </div>
+  </div>
 
   <script>
     const chat = document.getElementById('chat');
+    const mainView = document.getElementById('main-view');
+    const vocabView = document.getElementById('vocab-view');
+    const wikiView = document.getElementById('wiki-view');
+
+    function showVocabView() {
+      mainView.style.display = 'none';
+      wikiView.style.display = 'none';
+      vocabView.style.display = 'block';
+    }
+
+    function showWikiView() {
+      mainView.style.display = 'none';
+      vocabView.style.display = 'none';
+      wikiView.style.display = 'block';
+    }
+
+    function showChatView() {
+      vocabView.style.display = 'none';
+      wikiView.style.display = 'none';
+      mainView.style.display = 'block';
+    }
 
     function addInput() {
       const row = document.createElement('div');
@@ -155,12 +297,9 @@
 
           if (text.startsWith("NOT_IN_VOCABULARY:")) {
             const unknownWord = text.slice("NOT_IN_VOCABULARY:".length).trim();
-            const targetUrl = "training-data.html";
-            resp.textContent = `Word "${unknownWord}" is not present in vocabulary. Click here to open the training data page. - wont open if you are on phone because of huggingface`;
+            resp.textContent = `Word "${unknownWord}" is not present in the vocabulary. Click here to view the training text data directly.`;
             resp.classList.add('clickable');
-            resp.addEventListener('click', () => {
-              window.open(targetUrl, '_blank', 'noopener,noreferrer');
-            });
+            resp.addEventListener('click', showVocabView);
           } else {
             resp.textContent = text;
           }
@@ -182,7 +321,7 @@
 
       row.appendChild(input);
       row.appendChild(btn);
-      chat.appendChild(row);
+      mainView.appendChild(row); 
       input.focus();
     }
 
