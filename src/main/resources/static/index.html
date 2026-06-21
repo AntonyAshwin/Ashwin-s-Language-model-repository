@@ -68,6 +68,10 @@
       margin-bottom: 8px;
     }
 
+    .response.clickable {
+      cursor: pointer;
+    }
+
     /* Style rule for links generated inside error responses */
     .response a {
       color: #4a90e2;
@@ -159,10 +163,12 @@
           // Check if backend returned our custom unknown word flag
           if (text.startsWith("NOT_IN_VOCABULARY:")) {
             const unknownWord = text.slice("NOT_IN_VOCABULARY:".length).trim();
-            
-            // Build the clean message with a full-response clickable link
             const targetUrl = "training-data.html";
-            resp.innerHTML = `<a href="${targetUrl}" target="_blank">Word <strong>"${unknownWord}"</strong> is not present in vocabulary. click here to view all words from the vocabulary - just realized this only works on desktop and not one phones because of hugging space).</a>`;
+            resp.textContent = `Word "${unknownWord}" is not present in vocabulary. Click here to open the training data page. - wont open if you are on phone`;
+            resp.classList.add('clickable');
+            resp.addEventListener('click', () => {
+              window.open(targetUrl, '_blank', 'noopener,noreferrer');
+            });
           } else {
             // Standard expected sequence path
             resp.textContent = text;
