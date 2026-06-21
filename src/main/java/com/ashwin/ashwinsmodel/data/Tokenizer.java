@@ -26,6 +26,10 @@ public class Tokenizer {
         }
    }
 
+   public LinkedHashMap<Integer, String> getIndexToWord() {
+    return indexToWord;
+   }
+
    public HashMap<String, Integer> getWordToIndex() {
     return wordToIndex;
    }

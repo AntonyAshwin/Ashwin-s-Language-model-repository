@@ -69,6 +69,25 @@ public class NeuralBigramModel
             System.out.println("Epoch " + epoch + " | Avg Loss = " + totalLoss / pairs.size());
         }
     }
+    
+    public String predict(String inputWord)
+    {
+        Integer inputIdx = tokenizer.getWordToIndex().get(inputWord);
+        if (inputIdx == null)
+            return "Unknown word: " + inputWord;
+
+        double[] logits = new double[uniqueVocabSize];
+        for (int j = 0; j < uniqueVocabSize; j++)
+            logits[j] = bigramMatrix[inputIdx][j];
+
+        double[] probs = softmax(logits);
+
+        int bestIdx = 0;
+        for (int j = 1; j < uniqueVocabSize; j++)
+            if (probs[j] > probs[bestIdx]) bestIdx = j;
+
+        return tokenizer.getIndexToWord().get(bestIdx);
+    }
 
     public double computeLoss(double[] probs, int targetIdx)
     {

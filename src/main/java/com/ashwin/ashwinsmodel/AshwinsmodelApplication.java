@@ -5,6 +5,8 @@ package com.ashwin.ashwinsmodel;
 import com.ashwin.ashwinsmodel.data.Tokenizer;
 
 import java.util.HashMap;
+import java.util.Scanner;
+
 import com.ashwin.ashwinsmodel.model.NeuralBigramModel;	
 import com.ashwin.ashwinsmodel.data.DatasetLoader;	
 // @SpringBootApplication
@@ -21,6 +23,13 @@ public class AshwinsmodelApplication {
 		// for(int token : tokens)
 		// 	System.out.print(token + " ");
 		NeuralBigramModel neuralBigramModel = new NeuralBigramModel();
+		neuralBigramModel.trainModel();
+		Scanner sc = new Scanner(System.in);
+		String word;
+		while(true){
+			word = sc.nextLine();
+			System.out.println("predict('" + word + "') -> " + neuralBigramModel.predict(word));
+			}
 	}
 
 }
