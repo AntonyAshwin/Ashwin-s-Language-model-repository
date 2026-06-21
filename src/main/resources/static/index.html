@@ -107,7 +107,7 @@
   <div class="header">
     <h1>
       <a href="https://en.wikipedia.org/wiki/Word_n-gram_language_model#" target="_blank">
-        What is a bigram model ? (Click here)
+        What is a bigram model ? (Click here -  this only works on desktop and not on phones because of huggingface)
       </a>
     </h1>
   </div>
@@ -162,7 +162,7 @@
             
             // Build the clean message with a full-response clickable link
             const targetUrl = "training-data.html";
-            resp.innerHTML = `<a href="${targetUrl}" target="_blank">Word <strong>"${unknownWord}"</strong> is not present in vocabulary. click here to view all words from the vocabulary.</a>`;
+            resp.innerHTML = `<a href="${targetUrl}" target="_blank">Word <strong>"${unknownWord}"</strong> is not present in vocabulary. click here to view all words from the vocabulary - just realized this only works on desktop and not one phones because of hugging space).</a>`;
           } else {
             // Standard expected sequence path
             resp.textContent = text;
