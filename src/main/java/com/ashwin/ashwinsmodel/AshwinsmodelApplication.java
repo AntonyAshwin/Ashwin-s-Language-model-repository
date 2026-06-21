@@ -29,13 +29,11 @@ public class AshwinsmodelApplication {
 			String current = sc.nextLine();
 			StringBuilder sentence = new StringBuilder(current);
 			int count = 0;
-			int unknownCount = 0;
 			if (!current.endsWith(".")) {
 				while (count < 10) {
 					current = neuralBigramModel.predict(current);
 					if (current.startsWith("Unknown word:")) {
-						unknownCount++;
-						if (unknownCount >= 10) break;
+						break;
 					}
 					sentence.append(" ").append(current);
 					count++;
